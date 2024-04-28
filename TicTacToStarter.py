@@ -1,9 +1,9 @@
 """
 ############################## Homework TicTacTo ##############################
 
-% Student Name:
+% Student Name: Angel Ranjel
 
-% Student Unique Name:
+% Student Unique Name: aranjel
 
 % Lab Section 00X: 
 
@@ -59,17 +59,16 @@ def display_board(board):
     None
     '''
 
-    board_to_show = "" # string that will display the board, starts empty
+    board_to_show = "" 
     for i in range(len(board)):
-        if board[i] == 0: # 0 means unoccupied
-            # displayed numbers are one greater than the board index
-            board_to_show += str(i + 1) # display cell number
+        if board[i] == 0: 
+            board_to_show += str(i + 1)
         else:
-            board_to_show += player_name(board[i]) # display player's mark
-        if (i + 1) % 3 == 0: # every 3 cells, start a new row
+            board_to_show += player_name(board[i])
+        if (i + 1) % 3 == 0:
             board_to_show += "\n"
         else:
-            board_to_show += " | " # within a row, divide the cells
+            board_to_show += " | " 
     print()
     print(board_to_show)
 
@@ -93,12 +92,38 @@ def make_move(player, board):
         the board upon which to move
         the board is modified in place when a valid move is entered
     '''
-    # TODO: Implement function
-    pass
+    valid_move = False
+    while not valid_move:
+        try:
+            move = int(input(f"Player {player_name(player)}'s turn. Enter a move (1-9): "))
+            if move < 1 or move > 9:
+                print("Invalid input. Please enter a number between 1 and 9.")
+            elif board[move - 1] != 0:
+                print("This space is already occupied. Please try another move.")
+            else:
+                board[move - 1] = player
+                valid_move = True
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
 
 def check_win_horizontal(board):
-    # TODO: write docstring
+    """Check for a horizontal win on the board.
+
+    This function checks the three rows on a 3x3 Tic-Tac-Toe board to see if there's a horizontal win.
+    A win is found if one row contains the same player ID (all '1's for player 1 or all '2's for player 2).
+
+    Parameters
+    ----------
+    board : list
+        the board to check for a win, assumed to be a flat list of 9 integers (0, 1, 2)
+
+    Returns
+    -------
+    int
+        the player ID of the winner if a win is found, or 0 if no win is found.
+    """
+
     if (board[0] != 0 and 
         board[0] == board[1] and 
         board[0] == board[2]):
@@ -115,14 +140,50 @@ def check_win_horizontal(board):
 
 
 def check_win_vertical(board):
-    # TODO: write docstring
-    # TODO: implement function
+    """Check for a vertical win on the board.
+
+    This function checks the three columns on a 3x3 Tic-Tac-Toe board to see if there's a vertical win.
+    A win is found if one column contains the same player ID (all '1's for player 1 or all '2's for player 2).
+
+    Parameters
+    ----------
+    board : list
+        the board to check for a win, assumed to be a flat list of 9 integers (0, 1, 2)
+
+    Returns
+    -------
+    int
+        the player ID of the winner if a win is found, or 0 if no win is found.
+    """
+    if (board[0] != 0 and board[0] == board[3] and board[0] == board[6]):
+        return board[0]
+    if (board[1] != 0 and board[1] == board[4] and board[1] == board[7]):
+        return board[1]
+    if (board[2] != 0 and board[2] == board[5] and board[2] == board[8]):
+        return board[2]
     return 0
 
 
 def check_win_diagonal(board):
-    # TODO: write docstring
-    # TODO: implement function
+    """Check for a diagonal win on the board.
+
+    This function checks the two diagonal lines on a 3x3 Tic-Tac-Toe board to see if there's a diagonal win.
+    A win is found if either diagonal line contains the same player ID (all '1's for player 1 or all '2's for player 2).
+
+    Parameters
+    ----------
+    board : list
+        the board to check for a win, assumed to be a flat list of 9 integers (0, 1, 2)
+
+    Returns
+    -------
+    int
+        the player ID of the winner if a win is found, or 0 if no win is found.
+    """
+    if (board[0] != 0 and board[0] == board[4] and board[0] == board[8]):
+        return board[0]
+    if (board[2] != 0 and board[2] == board[4] and board[2] == board[6]):
+        return board[2]
     return 0
 
 
@@ -171,8 +232,21 @@ def next_player(current_player):
     int
         the id of the player to go next
     '''
-    # TODO: Implement function
-    return 2 
+    """Determines who goes next.
+
+    Given the current player ID, returns the player who should go next by toggling between player 1 and 2.
+
+    Parameters
+    ----------        
+    current_player : int
+        the id of the player who's turn it is now
+
+    Returns
+    -------
+    int
+        the id of the player to go next
+    """
+    return 2 if current_player == 1 else 1
 
 # MAIN PROGRAM (INDENT LEVEL 0)
 
@@ -189,12 +263,14 @@ while(moves_left > 0 and winner == 0):
     display_board(board)
     make_move(player, board)
     winner = check_win(board)
+    if winner != 0:
+        display_board(board)
+        print(f"Game over! {player_name(winner)} wins!")
+        break
     player = next_player(player)
     moves_left -= 1
 
+if winner == 0:
+    display_board(board)
+    print("Game over! Nobody wins!")
 
-# TODO: write code to display the correct winner. 
-# NOTE: where you implement this (in the while loop or outside it) is up to you to decide, 
-# but your program should behave like the sample output
-# NOTE: You may also find it helpful to display the board one final time to make sure 
-# you are correctly identifying the winner, but you will not be graded on that. 
